@@ -18,6 +18,8 @@ def add_parser_options(parser_addoption, with_defaults=True):
     """Add argparse options
 
     This is shared between the CLI and pytest (for now)
+
+    See also testutils.pytesthook.hooks.pytest_addoption
     """
     parser_addoption(
         "--tavern-global-cfg",
@@ -47,6 +49,13 @@ def add_parser_options(parser_addoption, with_defaults=True):
         help="Use new traceback style (beta)",
         default=False,
         action="store_true",
+    )
+    parser_addoption(
+        "--tavern-file-path-regex",
+        help="Regex to search for Tavern YAML test files",
+        default=r".+\.tavern\.ya?ml$",
+        action="store",
+        nargs=1,
     )
 
 
@@ -81,21 +90,14 @@ def load_global_cfg(pytest_config):
 
         global_cfg["variables"] = format_keys(loaded_variables, tavern_box)
 
-    strict = []
-
-    if pytest_config.getini("tavern-strict") is not None:
-        # Lowest priority
-        strict = pytest_config.getini("tavern-strict")
-        if isinstance(strict, list):
-            if any(
-                i not in ["body", "headers", "redirect_query_params"] for i in strict
-            ):
-                raise exceptions.UnexpectedKeysError(
-                    "Invalid values for 'strict' use in config file"
-                )
-    elif pytest_config.getoption("tavern_strict") is not None:
-        # Middle priority
-        strict = pytest_config.getoption("tavern_strict")
+    strict = get_option_generic(pytest_config, "tavern-strict", [])
+    if isinstance(strict, list):
+        valid_keys = ["body", "headers", "redirect_query_params"]
+        if any(i not in valid_keys for i in strict):
+            msg = "Invalid values for 'strict' given - expected one of {}, got {}".format(
+                valid_keys, strict
+            )
+            raise exceptions.InvalidConfigurationException(msg)
 
     # Can be overridden in tests
     global_cfg["strict"] = strict
@@ -116,3 +118,17 @@ def load_global_cfg(pytest_config):
     logger.debug("Global config: %s", global_cfg)
 
     return global_cfg
+
+
+def get_option_generic(pytest_config, flag, default):
+    ini_flag = flag.replace("-", "_")
+    cli_flag = flag
+
+    if pytest_config.getini(ini_flag) is not None:
+        # Lowest priority
+        return pytest_config.getini(ini_flag)
+    elif pytest_config.getoption(cli_flag) is not None:
+        # Middle priority
+        return pytest_config.getoption(cli_flag)
+    else:
+        return default
