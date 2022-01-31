@@ -103,8 +103,7 @@ class TestTLS(object):
         assert not c._enable_tls
 
     def test_invalid_tls_ver(self):
-        """Bad tls versions raise exception
-        """
+        """Bad tls versions raise exception"""
         args = {"connect": {"host": "localhost"}, "tls": {"tls_version": "custom_tls"}}
 
         with pytest.raises(exceptions.MQTTTLSError):
@@ -120,22 +119,19 @@ def fix_example_request():
 
 class TestRequests:
     def test_unknown_fields(self, req, includes):
-        """Unkown args should raise an error
-        """
+        """Unkown args should raise an error"""
         req["fodokfowe"] = "Hello"
 
         with pytest.raises(exceptions.UnexpectedKeysError):
             MQTTRequest(Mock(), req, includes)
 
     def test_missing_format(self, req, includes):
-        """All format variables should be present
-        """
+        """All format variables should be present"""
         del includes["variables"]["request_topic"]
 
         with pytest.raises(exceptions.MissingFormatError):
             MQTTRequest(Mock(), req, includes)
 
     def test_correct_format(self, req, includes):
-        """All format variables should be present
-        """
+        """All format variables should be present"""
         MQTTRequest(Mock(), req, includes)

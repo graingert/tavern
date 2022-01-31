@@ -121,8 +121,7 @@ def get_wrapped_response_function(ext):
 
 
 def get_wrapped_create_function(ext):
-    """Same as above, but don't require a response
-    """
+    """Same as above, but don't require a response"""
     args = ext.get("extra_args") or ()
     kwargs = ext.get("extra_kwargs") or {}
     func = import_ext_function(ext["function"])
@@ -322,7 +321,7 @@ def validate_data_key_with_ext_function(value, rule_obj, path):
 
 
 def validate_json_with_extensions(value, rule_obj, path):
-    """ Performs the above match, but also matches a dict or a list. This it
+    """Performs the above match, but also matches a dict or a list. This it
     just because it seems like you can't match a dict OR a list in pykwalify
     """
     validate_extensions(value, rule_obj, path, must_iter=False)
