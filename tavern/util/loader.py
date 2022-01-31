@@ -27,8 +27,7 @@ def makeuuid(loader, node):
 
 
 class RememberComposer(Composer):
-    """A composer that doesn't forget anchors across documents
-    """
+    """A composer that doesn't forget anchors across documents"""
 
     def compose_document(self):
         # Drop the DOCUMENT-START event.
@@ -72,20 +71,20 @@ class SourceMappingConstructor(SafeConstructor):
     # construction") by first exhausting iterators, then yielding
     # copies.
     def construct_yaml_map(self, node):
-        obj, = SafeConstructor.construct_yaml_map(self, node)
+        (obj,) = SafeConstructor.construct_yaml_map(self, node)
         return dict_node(obj, node.start_mark, node.end_mark)
 
     def construct_yaml_seq(self, node):
-        obj, = SafeConstructor.construct_yaml_seq(self, node)
+        (obj,) = SafeConstructor.construct_yaml_seq(self, node)
         return list_node(obj, node.start_mark, node.end_mark)
 
 
 SourceMappingConstructor.add_constructor(
-    u"tag:yaml.org,2002:map", SourceMappingConstructor.construct_yaml_map
+    "tag:yaml.org,2002:map", SourceMappingConstructor.construct_yaml_map
 )
 
 SourceMappingConstructor.add_constructor(
-    u"tag:yaml.org,2002:seq", SourceMappingConstructor.construct_yaml_seq
+    "tag:yaml.org,2002:seq", SourceMappingConstructor.construct_yaml_seq
 )
 
 yaml.add_representer(dict_node, yaml.representer.SafeRepresenter.represent_dict)

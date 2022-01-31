@@ -85,8 +85,7 @@ class RestResponse(BaseResponse):
             log_dict_block(redirect_query_params, "Redirect URL query parameters")
 
     def _get_redirect_query_params(self, response):
-        """If there was a redirect header, get any query parameters from it
-        """
+        """If there was a redirect header, get any query parameters from it"""
 
         try:
             redirect_url = response.headers["location"]

@@ -134,8 +134,7 @@ class MQTTClient(object):
         self._client.on_subscribe = self._on_subscribe
 
     def _handle_tls_args(self):
-        """Make sure TLS options are valid
-        """
+        """Make sure TLS options are valid"""
 
         if self._tls_args:
             # If _any_ options are specified, first assume we DO want it enabled
@@ -234,8 +233,7 @@ class MQTTClient(object):
             return msg
 
     def publish(self, topic, payload=None, qos=None, retain=None):
-        """publish message using paho library
-        """
+        """publish message using paho library"""
         logger.debug("Checking subscriptions")
 
         def not_finished_subcribing_to():

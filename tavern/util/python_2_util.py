@@ -3,8 +3,7 @@ from functools import partial
 
 
 class partialmethod(partial):
-    """Like Python 3's partialmethod but backported for Python 2
-    """
+    """Like Python 3's partialmethod but backported for Python 2"""
 
     def __get__(self, instance, owner):
         if instance is None:
@@ -13,7 +12,7 @@ class partialmethod(partial):
 
 
 def indent(text, prefix):
-    """ String indentation """
+    """String indentation"""
     try:
         from textwrap import indent as _indent
     except ImportError:  # undefined function (wasn't added until Python 3.3)

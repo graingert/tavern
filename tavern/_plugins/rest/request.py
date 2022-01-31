@@ -326,7 +326,7 @@ class RestRequest(BaseRequest):
             return {}
 
     def run(self):
-        """ Runs the prepared request and times it
+        """Runs the prepared request and times it
 
         Todo:
             time it

@@ -12,23 +12,30 @@ app = Flask(__name__)
 
 @app.route("/token", methods=["GET"])
 def token():
-    return '<div><a src="http://127.0.0.1:5003/verify?token=c9bb34ba-131b-11e8-b642-0ed5f89f718b">Link</a></div>', 200
+    return (
+        '<div><a src="http://127.0.0.1:5003/verify?token=c9bb34ba-131b-11e8-b642-0ed5f89f718b">Link</a></div>',
+        200,
+    )
 
 
 @app.route("/headers", methods=["GET"])
 def headers():
-    return 'OK', 200, {
-        'X-Integration-Value': "_HelloWorld1",
-        "ATestHEader": "orange",
-    }
+    return (
+        "OK",
+        200,
+        {
+            "X-Integration-Value": "_HelloWorld1",
+            "ATestHEader": "orange",
+        },
+    )
 
 
 @app.route("/verify", methods=["GET"])
 def verify():
-    if request.args.get('token') == 'c9bb34ba-131b-11e8-b642-0ed5f89f718b':
-        return '', 200
+    if request.args.get("token") == "c9bb34ba-131b-11e8-b642-0ed5f89f718b":
+        return "", 200
     else:
-        return '', 401
+        return "", 401
 
 
 @app.route("/get_thing_slow", methods=["GET"])
@@ -50,7 +57,7 @@ def get_fake_dictionary():
                 "doubly": {
                     "inner": "value",
                 }
-            }
+            },
         },
         "an_integer": 123,
         "a_string": "abc",
@@ -84,7 +91,7 @@ def nested_list_response():
             "b",
             {
                 "key": "val",
-            }
+            },
         ]
     }
     return jsonify(response), 200
@@ -93,7 +100,7 @@ def nested_list_response():
 @app.route("/fake_upload_file", methods=["POST"])
 def upload_fake_file():
     if not request.files:
-        return '', 401
+        return "", 401
 
     if not mimetypes.inited:
         mimetypes.init()
@@ -112,7 +119,7 @@ def upload_fake_file():
         path = os.path.join("/tmp", file_to_save.filename)
         file_to_save.save(path)
 
-    return '', 200
+    return "", 200
 
 
 @app.route("/fake_upload_file_data", methods=["POST"])
@@ -156,9 +163,7 @@ def multiple_path_items_response():
 
 @app.route("/pi", methods=["GET"])
 def return_fp_number():
-    response = {
-        "pi": math.pi
-    }
+    response = {"pi": math.pi}
     return jsonify(response), 200
 
 
@@ -237,17 +242,17 @@ def stream_file():
         for data in range(1, 10):
             yield bytes(data)
 
-    response = Response(iter(), mimetype='application/octet-stream')
-    response.headers['Content-Disposition'] = 'attachment; filename=tmp.txt'
+    response = Response(iter(), mimetype="application/octet-stream")
+    response.headers["Content-Disposition"] = "attachment; filename=tmp.txt"
     return response
 
 
-statuses = itertools.cycle(['processing', 'ready'])
+statuses = itertools.cycle(["processing", "ready"])
 
 
 @app.route("/poll", methods=["GET"])
 def poll():
-    response = {'status': next(statuses)}
+    response = {"status": next(statuses)}
     return jsonify(response)
 
 
@@ -259,8 +264,7 @@ def _maybe_get_cookie_name():
 def give_cookie():
     cookie_name = _maybe_get_cookie_name()
     response = Response()
-    response.set_cookie(cookie_name,
-                        base64.b64encode(os.urandom(16)).decode("utf8"))
+    response.set_cookie(cookie_name, base64.b64encode(os.urandom(16)).decode("utf8"))
     return response, 200
 
 
@@ -268,8 +272,10 @@ def give_cookie():
 def expect_cookie():
     cookie_name = _maybe_get_cookie_name()
     if cookie_name not in request.cookies:
-        return jsonify(
-            {"error": "No cookie named {} in request".format(cookie_name)}), 400
+        return (
+            jsonify({"error": "No cookie named {} in request".format(cookie_name)}),
+            400,
+        )
     else:
         return jsonify({"status": "ok"}), 200
 

@@ -5,8 +5,7 @@ from .util import add_parser_options
 
 
 def pytest_addoption(parser):
-    """Add an option to pass in a global config file for tavern
-    """
+    """Add an option to pass in a global config file for tavern"""
     add_parser_options(parser.addoption, with_defaults=False)
 
     parser.addini(

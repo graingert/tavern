@@ -170,7 +170,7 @@ class YamlItem(pytest.Item):
                 )
 
     def repr_failure(self, excinfo):
-        """ called when self.runtest() raises an exception.
+        """called when self.runtest() raises an exception.
 
         Todo:
             This stuff is copied from pytest at the moment - needs a bit of
